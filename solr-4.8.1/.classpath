@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="dist/solrj-lib/commons-io-2.1.jar"/>
+	<classpathentry kind="lib" path="dist/solrj-lib/httpclient-4.3.1.jar"/>
+	<classpathentry kind="lib" path="dist/solrj-lib/httpcore-4.3.jar"/>
+	<classpathentry kind="lib" path="dist/solrj-lib/httpmime-4.3.1.jar"/>
+	<classpathentry kind="lib" path="dist/solrj-lib/jcl-over-slf4j-1.7.6.jar"/>
+	<classpathentry kind="lib" path="dist/solrj-lib/jul-to-slf4j-1.7.6.jar"/>
+	<classpathentry kind="lib" path="dist/solrj-lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="dist/solrj-lib/noggit-0.5.jar"/>
+	<classpathentry kind="lib" path="dist/solrj-lib/slf4j-api-1.7.6.jar"/>
+	<classpathentry kind="lib" path="dist/solrj-lib/slf4j-log4j12-1.7.6.jar"/>
+	<classpathentry kind="lib" path="dist/solrj-lib/wstx-asl-3.2.7.jar"/>
+	<classpathentry kind="lib" path="dist/solrj-lib/zookeeper-3.4.6.jar"/>
+	<classpathentry kind="lib" path="dist/test-framework/lib/ant-1.8.2.jar"/>
+	<classpathentry kind="lib" path="dist/test-framework/lib/junit-4.10.jar"/>
+	<classpathentry kind="lib" path="dist/test-framework/lib/junit4-ant-2.1.3.jar"/>
+	<classpathentry kind="lib" path="dist/test-framework/lib/randomizedtesting-runner-2.1.3.jar"/>
+	<classpathentry kind="lib" path="dist/solr-analysis-extras-4.8.1.jar"/>
+	<classpathentry kind="lib" path="dist/solr-cell-4.8.1.jar"/>
+	<classpathentry kind="lib" path="dist/solr-clustering-4.8.1.jar"/>
+	<classpathentry kind="lib" path="dist/solr-core-4.8.1.jar"/>
+	<classpathentry kind="lib" path="dist/solr-dataimporthandler-4.8.1.jar"/>
+	<classpathentry kind="lib" path="dist/solr-dataimporthandler-extras-4.8.1.jar"/>
+	<classpathentry kind="lib" path="dist/solr-langid-4.8.1.jar"/>
+	<classpathentry kind="lib" path="dist/solr-map-reduce-4.8.1.jar"/>
+	<classpathentry kind="lib" path="dist/solr-morphlines-cell-4.8.1.jar"/>
+	<classpathentry kind="lib" path="dist/solr-morphlines-core-4.8.1.jar"/>
+	<classpathentry kind="lib" path="dist/solr-solrj-4.8.1.jar"/>
+	<classpathentry kind="lib" path="dist/solr-test-framework-4.8.1.jar"/>
+	<classpathentry kind="lib" path="dist/solr-uima-4.8.1.jar"/>
+	<classpathentry kind="lib" path="dist/solr-velocity-4.8.1.jar"/>
+	<classpathentry kind="lib" path="contrib/clustering/lib/attributes-binder-1.2.1.jar"/>
+	<classpathentry kind="lib" path="contrib/clustering/lib/carrot2-mini-3.9.0.jar"/>
+	<classpathentry kind="lib" path="contrib/clustering/lib/hppc-0.5.2.jar"/>
+	<classpathentry kind="lib" path="contrib/clustering/lib/jackson-core-asl-1.9.13.jar"/>
+	<classpathentry kind="lib" path="contrib/clustering/lib/jackson-mapper-asl-1.9.13.jar"/>
+	<classpathentry kind="lib" path="contrib/clustering/lib/mahout-collections-1.0.jar"/>
+	<classpathentry kind="lib" path="contrib/clustering/lib/mahout-math-0.6.jar"/>
+	<classpathentry kind="lib" path="contrib/clustering/lib/simple-xml-2.7.jar"/>
+	<classpathentry kind="lib" path="contrib/velocity/lib/commons-beanutils-1.7.0.jar"/>
+	<classpathentry kind="lib" path="contrib/velocity/lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="contrib/velocity/lib/velocity-1.7.jar"/>
+	<classpathentry kind="lib" path="contrib/velocity/lib/velocity-tools-2.0.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>
