@@ -3,6 +3,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.core.LowerCaseFilter;
@@ -29,7 +32,11 @@ import org.apache.solr.util.plugin.SolrCoreAware;
 
 
 
+
 public class HierarchyComponent extends SearchComponent implements SolrCoreAware {
+	
+	//hashmap dei livelli gerarchici <Gerarchia,Count>
+	private static HashMap<String,Integer> h =new HashMap<String, Integer>();
 	
 	public void inform(SolrCore arg0) {
 	// TODO Auto-generated method stub
@@ -110,8 +117,35 @@ public class HierarchyComponent extends SearchComponent implements SolrCoreAware
 				e.printStackTrace();
 			}
 			
-    	    SolrDocumentList results=response2.getResults();	
+    	    SolrDocumentList results=response2.getResults();
+    	    
+    	    ArrayList<Desc> descrittori=new ArrayList<Desc>();
+    	    
+    	    for(int i=0;i<results.size();i++)
+    	    {
+    	    	Desc aux=new Desc();
+    	    	aux.setName(results.get(i).getFieldValue("descrittore").toString());
+    	    	aux.setGerarchia((ArrayList)(results.get(i).getFieldValues("hierarchy")));
+    	    	descrittori.add(aux);
+    	    }    	    
+    	    
+    	    ArrayList<Desc> out=merge (clusters,descrittori); 	    
+    	    
+    	    for(int i=0; i<out.size();i++)
+    	    {
+    	    	
+    	    	System.out.println(out.get(i).getGerarchia().get(0));
+    	    	System.out.println(out.get(i).getName());
+    	    	for(int j=0; j<out.get(i).getDocs().size();j++)
+    	    	{
+    	    		System.out.println(out.get(i).getDocs().get(j));
+    	    	}    	    	
+    	    }
+    	    
+    	    printMap(h);
+    	    
 	}
+	
 	/*
 	* Funzione per lo stemming "text_it" di una stringa
 	*/
@@ -173,6 +207,11 @@ private static ArrayList<Desc> merge (ArrayList<Cluster> clusters,ArrayList<Desc
 				  descrittori.get(indexD).setDocs(clusters.get(indexC).getDocs());
 				  descrittori.get(indexD).setName(clusters.get(indexC).getlabel());
 				  output.add(descrittori.get(indexD));
+				  // qui vado a richiamare la funzione per la costruzione del primo livello	 
+				  buildFacetLevel(descrittori.get(indexD));
+				 
+				  
+				  
 				  indexC++;
 				  indexD++;
 			  }
@@ -182,6 +221,7 @@ private static ArrayList<Desc> merge (ArrayList<Cluster> clusters,ArrayList<Desc
 				  aux.setName(clusters.get(indexC).getLabel());
 				  aux.setGerarchia(new ArrayList<String>(Arrays.asList(clusters.get(indexC).getLabel())));
 				  output.add(aux);
+				  buildFacetLevel(aux);
 				  indexC++;
 			  }  
 		  }
@@ -192,11 +232,42 @@ private static ArrayList<Desc> merge (ArrayList<Cluster> clusters,ArrayList<Desc
 			  aux.setName(clusters.get(indexC).getLabel());
 			  aux.setGerarchia(new ArrayList<String>(Arrays.asList(clusters.get(indexC).getLabel())));
 			  output.add(aux);
+			  buildFacetLevel(aux);
 			  indexC++;
 		  }
 		  return output;
 		  
 	  }
-	
-	
+
+
+private static void buildFacetLevel(Desc descrittore)
+{
+	 for(int k=0; k<descrittore.getGerarchia().size();k++)
+	  {
+		  String[] first=  descrittore.getGerarchia().get(k).split("/");
+		  
+		// se non esiste il primo livello, allora vado a inserire esso ed il count 
+			if (!h.containsKey(first[0]))
+			{
+				h.put(first[0], descrittore.getDocs().size());
+			}
+			//altrimenti aggiorno il count
+			else
+			{
+				h.put(first[0], h.get(first[0]) + descrittore.getDocs().size());
+			}
+	  
+	  }
+}
+
+//metodo che mi stampa solo il contenuto della hashmap
+public static void printMap(Map mp) {
+    Iterator it = mp.entrySet().iterator();
+    while (it.hasNext()) {
+        Map.Entry pairs = (Map.Entry)it.next();
+        System.out.println(pairs.getKey() + " = " + pairs.getValue());
+        it.remove(); // avoids a ConcurrentModificationException
+    }
+}
+
 }
