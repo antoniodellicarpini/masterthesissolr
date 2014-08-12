@@ -22,6 +22,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
+import org.apache.solr.common.util.NamedList;
 import org.apache.solr.common.util.SimpleOrderedMap;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.handler.component.ResponseBuilder;
@@ -159,11 +160,15 @@ public class HierarchyComponent extends SearchComponent implements SolrCoreAware
 	    ArrayList<Desc> out = merge (clusters,descrittori);
 	    //rb.rsp.add("hierarchy", h);
 	    Iterator it = h.entrySet().iterator();
+	    
+	    NamedList embeddedResponse = new SimpleOrderedMap();
+	    
 	    while (it.hasNext()) {
 	        HashMap.Entry resp = (HashMap.Entry)it.next();
-	        
-	        rb.rsp.add((String) resp.getKey(), resp.getValue());
+	        embeddedResponse.add((String) resp.getKey(), resp.getValue());
+	        //rb.rsp.add((String) resp.getKey(), resp.getValue());
 	    }
+	    rb.rsp.add("clusterGerarchizzati",embeddedResponse);
 	    
 	    printMap(h);
 	    
