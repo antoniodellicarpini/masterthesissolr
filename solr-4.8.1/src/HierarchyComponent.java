@@ -71,6 +71,8 @@ public class HierarchyComponent extends SearchComponent implements SolrCoreAware
 	    ArrayList<Cluster> clusters = new ArrayList<Cluster>();
 	    // ciclo sui cluster
 	    String queryThes="";
+
+	    System.out.println(rb.req.getParams().get("cliccked"));
 	    
 		for (int j=0; j<cluster.size();j++)
 		{
@@ -158,18 +160,25 @@ public class HierarchyComponent extends SearchComponent implements SolrCoreAware
 	     * contenente tutti i termini ognuno dei quali avrà associato i propri documenti.
 		*/
 	    ArrayList<Desc> out = merge (clusters,descrittori);
+	    
 	    //rb.rsp.add("hierarchy", h);
 	    Iterator it = h.entrySet().iterator();
 	    
 	    NamedList embeddedResponse = new SimpleOrderedMap();
 	    
+	    
 	    while (it.hasNext()) {
 	        HashMap.Entry resp = (HashMap.Entry)it.next();
-	        embeddedResponse.add((String) resp.getKey(), resp.getValue());
+	        
+	        SimpleOrderedMap interna= new SimpleOrderedMap();
+	        interna.add("label",resp.getKey());
+	        interna.add("numDocs", resp.getValue());
+	        
+	        embeddedResponse.addAll(interna);
 	        //rb.rsp.add((String) resp.getKey(), resp.getValue());
 	    }
 	    rb.rsp.add("clusterGerarchizzati",embeddedResponse);
-	    
+	  
 	    printMap(h);
 	    
 	}
@@ -207,7 +216,6 @@ public class HierarchyComponent extends SearchComponent implements SolrCoreAware
 	    }
     
 	    tokenStream.close();
-	    
 	    // elimino l'ultimo carattere (spazio vuoto)
 	    String l = sb.toString().substring(0,sb.toString().length()-1);
 	    
@@ -331,8 +339,7 @@ public class HierarchyComponent extends SearchComponent implements SolrCoreAware
 	    Iterator it = mp.entrySet().iterator();
 	    while (it.hasNext()) {
 	        HashMap.Entry pairs = (HashMap.Entry)it.next();
-	        System.out.println(pairs.getKey() + " = " + pairs.getValue());
-	        
+	        //System.out.println(pairs.getKey() + " = " + pairs.getValue());
 	        it.remove(); 
 	    }
 	}

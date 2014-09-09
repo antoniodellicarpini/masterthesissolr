@@ -932,6 +932,9 @@
   <requestHandler name="/browse" class="solr.SearchHandler">
      <lst name="defaults">
        <str name="echoParams">explicit</str>
+       
+       
+       
 
        <!-- VelocityResponseWriter settings -->
        <str name="wt">velocity</str>
@@ -999,6 +1002,23 @@
        <str name="f.content.hl.alternateField">content</str>
        <str name="f.content.hl.maxAlternateFieldLength">750</str>
 
+		<!-- configuarazione di clustering -->
+		<bool name="clustering">true</bool>
+		<bool name="clustering.results">true</bool>
+		<!-- Field name with the logical "title" of a each document (optional) -->
+		<str name="carrot.title">name</str>
+		<!-- Field name with the logical "URL" of a each document (optional) -->
+		<str name="carrot.url">id</str>
+		<!-- Field name with the logical "content" of a each document (optional)-->
+		<str name="carrot.snippet">features</str>
+		<!-- Apply highlighter to the title/content and use this for clustering.-->
+		<bool name="carrot.produceSummary">true</bool>
+		<!-- the maximum number of labels per cluster -->
+		<!--<int name="carrot.numDescriptions">5</int>-->
+		<!-- produce sub clusters -->
+		<bool name="carrot.outputSubClusters">false</bool>
+		
+
        <!-- Spell checking defaults -->
        <str name="spellcheck">on</str>
        <str name="spellcheck.extendedResults">false</str>       
@@ -1014,7 +1034,10 @@
      <!-- append spellchecking to our list of components -->
      <arr name="last-components">
        <str>spellcheck</str>
+       <str>clustering</str>
+       <str>gerarchia</str>
      </arr>
+     
   </requestHandler>
 
   

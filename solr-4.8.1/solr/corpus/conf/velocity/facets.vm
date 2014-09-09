@@ -8,3 +8,5 @@
 #parse('facet_ranges.vm')
 #parse('facet_pivot.vm')
 #parse('cluster.vm')
+#parse('hierarchy.vm')
+
