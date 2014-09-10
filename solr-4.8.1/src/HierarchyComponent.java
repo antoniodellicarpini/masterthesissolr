@@ -28,7 +28,6 @@ import org.apache.solr.core.SolrCore;
 import org.apache.solr.handler.component.ResponseBuilder;
 import org.apache.solr.handler.component.SearchComponent;
 import org.apache.solr.util.plugin.SolrCoreAware;
-import org.apache.solr.handler.clustering.*;
 
 
 public class HierarchyComponent extends SearchComponent implements SolrCoreAware {
@@ -71,8 +70,6 @@ public class HierarchyComponent extends SearchComponent implements SolrCoreAware
 	    ArrayList<Cluster> clusters = new ArrayList<Cluster>();
 	    // ciclo sui cluster
 	    String queryThes="";
-
-	    System.out.println(rb.req.getParams().get("cliccked"));
 	    
 		for (int j=0; j<cluster.size();j++)
 		{
@@ -123,7 +120,6 @@ public class HierarchyComponent extends SearchComponent implements SolrCoreAware
 	    query.addFacetField("hierarchy");
 	    query.addSort("descrittore",ORDER.asc);
 	    query.setFacetSort("index");
-	    System.out.println(query);
 	    /*
 	     * Effettuiamo la query sul server e recuperiamo tutti i documenti ottenuti in output.
 		*/
@@ -161,26 +157,111 @@ public class HierarchyComponent extends SearchComponent implements SolrCoreAware
 		*/
 	    ArrayList<Desc> out = merge (clusters,descrittori);
 	    
-	    //rb.rsp.add("hierarchy", h);
+	    if(rb.req.getParams().get("clicked")!=null){
+	    	System.out.println("Elemento cliccato:"+rb.req.getParams().get("clicked"));
+	    HashMap<String,Integer> elements = new HashMap<String, Integer>();
+	    ArrayList<String> docs = new ArrayList<String>();
+	    	
+	    	int i=0;
+	    	// cicliamo sui descrittori
+	    	while(i < out.size()){
+	    		boolean trovato=false;
+	    		int j=0;
+	    		// cicliamo sulle gerarchie di un descrittore
+	    		while(j < out.get(i).getGerarchia().size() && !trovato){
+	    			String[] parole =  out.get(i).getGerarchia().get(j).split("/");
+	    			
+	    			System.out.println("gerarchia:"+out.get(i).getGerarchia().get(j));
+	    			int k=0;
+	    			while(k < parole.length && !trovato){
+	    				System.out.println("parole[k]:"+parole[k]);
+	    				//rb.req.getParams().get("clicked").substring(1, rb.req.getParams().get("clicked").length()-1)
+	    				if(parole[k].equals(rb.req.getParams().get("clicked"))){
+	    					trovato=true;
+	    					System.out.println("entro");
+		    			}	
+	    			k++;
+	    			}
+	    			
+	    			if(trovato){
+	    				if(k==parole.length){
+	    					System.out.println("entro in documenti");
+	    					//prendiamo solo i docs
+	    					docs = out.get(i).getDocs(); 
+	    				}
+	    				else{
+	    					System.out.println("entro nei livelli");
+	    					//prendiamo l'elemento figlio dell'elemento in posizione "k"
+	    					System.out.println("livello da aggiungere"+parole[k]);
+	    					if (!elements.containsKey(parole[k]))
+	    					{
+	    						elements.put(parole[k], out.get(i).getDocs().size());
+	    					}
+	    					//altrimenti aggiorno il count
+	    					else
+	    					{
+	    						elements.put(parole[k], elements.get(parole[k]) + out.get(i).getDocs().size());
+	    					}
+	    					
+	    					
+	    				}
+	    			
+	    			}
+	    		j++;
+		    	}
+	    	i++;
+	    	}
+	    	
+	    // aggiunta alla response
+	    	
+	    	Iterator it = elements.entrySet().iterator();
+		    
+		    NamedList[] array = new NamedList[elements.size()];
+		    
+		    int index=0;
+		    while (it.hasNext()) {
+		    	
+		    	NamedList embeddedResponse = new SimpleOrderedMap();
+		        HashMap.Entry resp = (HashMap.Entry)it.next();
+		        embeddedResponse.add("labels", (String) resp.getKey());
+		        embeddedResponse.add("numDocs", resp.getValue());
+		        
+		        array[index] = embeddedResponse;
+		        index++;
+		        
+		    }
+		    
+		    rb.rsp.add("ajax_level",array);
+	    	rb.rsp.add("ajax_docs", docs);
+	    	rb.rsp.add("clicked", rb.req.getParams().get("clicked"));
+	    	
+	    }
+	    else{
+	    
+	    
 	    Iterator it = h.entrySet().iterator();
 	    
-	    NamedList embeddedResponse = new SimpleOrderedMap();
+	    NamedList[] array = new NamedList[h.size()];
 	    
-	    
+	    int i=0;
 	    while (it.hasNext()) {
+	    	
+	    	NamedList embeddedResponse = new SimpleOrderedMap();
 	        HashMap.Entry resp = (HashMap.Entry)it.next();
+	        String[] myStringArray = new String[1];
+	        myStringArray[0] = (String) resp.getKey();
+	        embeddedResponse.add("labels", myStringArray);
+	        embeddedResponse.add("numDocs", resp.getValue());
 	        
-	        SimpleOrderedMap interna= new SimpleOrderedMap();
-	        interna.add("label",resp.getKey());
-	        interna.add("numDocs", resp.getValue());
+	        array[i] = embeddedResponse;
+	        i++;
 	        
-	        embeddedResponse.addAll(interna);
-	        //rb.rsp.add((String) resp.getKey(), resp.getValue());
 	    }
-	    rb.rsp.add("clusterGerarchizzati",embeddedResponse);
+	    
+	    rb.rsp.add("clusterGerarchizzati",array);
 	  
 	    printMap(h);
-	    
+	    }
 	}
 	
 	/*

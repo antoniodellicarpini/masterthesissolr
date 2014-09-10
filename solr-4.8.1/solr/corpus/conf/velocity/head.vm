@@ -29,6 +29,16 @@
         }
       });
 
+	(function($) {
+     $.fn.on_search = function(query) {
+       return this.each(function(){
+          var url='http://localhost:8983/solr/corpus/search?q='+query+'&wt=json&callback=?&json.wrf=on_data';
+        $.getJSON(url);
+       })
+     };
+    })(jQuery);
+
+
       // http://localhost:8983/solr/collection1/terms?terms.fl=name&terms.prefix=i&terms.sort=count&wt=velocity&v.template=suggest
     });
 
