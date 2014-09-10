@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.core.StopFilter;
@@ -234,6 +233,7 @@ public class HierarchyComponent extends SearchComponent implements SolrCoreAware
 		    rb.rsp.add("ajax_level",array);
 	    	rb.rsp.add("ajax_docs", docs);
 	    	rb.rsp.add("clicked", rb.req.getParams().get("clicked"));
+	    	rb.rsp.add("q", rb.req.getParams().get("q"));
 	    	
 	    }
 	    else{
