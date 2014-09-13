@@ -29,51 +29,7 @@
         }
       });
 	
-	
-	(function($) {
-     $.fn.on_search = function(query) {
-       return this.each(function(){
-          var url='http://localhost:8983/solr/corpus/search?q='+query+'&wt=json&callback=?&json.wrf=on_data';
-        $.getJSON(url);
-       })
-     };
-    })(jQuery);
-
-
       // http://localhost:8983/solr/collection1/terms?terms.fl=name&terms.prefix=i&terms.sort=count&wt=velocity&v.template=suggest
     });
 
     </script>
-<script>
-
-function on_data(data) {     
-        $('#results').empty();
-        var query=""; 
-        var level = data.ajax_level;
-        $.each(level, function(i, item) {
-				
-			if(data.q=="*:*")
-		        {
-		        		query='*:*&clicked='+item.labels;
-		        }
-		    else
-		    {
-		    	query=data.q+'&clicked='+item.labels;
-		    }    	
-            $('#'+data.clicked.replace(/\s/g, '')).prepend($('<a href=# onClick=$.fn.on_search("'+query+'"); >' + item.labels +'('+ item.numDocs +')'+'</a>'));
-    		$('#'+data.clicked.replace(/\s/g, '')).prepend($('<div id="'+ item.labels +'"> </div>'));
-    		
-    		
-            
-             
-        });
-        
-         var docs = data.ajax_docs;
-        $.each(docs, function(i, item) {
-            $('#'+data.clicked.replace(/\s/g, '')).prepend($('<a href="#" >' + item + '</a>'));
-             
-        });
-        
-    }
-    
-</script>    

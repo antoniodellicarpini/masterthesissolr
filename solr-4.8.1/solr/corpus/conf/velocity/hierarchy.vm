@@ -3,28 +3,39 @@
   Hierarchy
 </h2>
 
+#set($first=$response.response.first)
 ## For each hierarchy
 
+#if($response.response.clicked!="")
+		 	  		<h3>$response.response.clicked</h3>
+#end
 <ol>
 #foreach ($hierarchy in $response.response.clusterGerarchizzati)
-
-#set($labels = $hierarchy.get('labels'))
-
-<li>
-    #foreach ($label in $labels)
-    
-      #if($response.response.responseHeader.get('params').size()==0)
-      	#set($query = "*:*&clicked=$label")
- 	  #else
- 	  	#set($query = "$params.get('q')&clicked=$label")
- 	  #end
- 	  <a id="label" href="#" onClick="$(this).on_search('$query');">
-        $label ($hierarchy.get('numDocs'))
- 	  </a>
- 	  <div id="$label.replace(" ", "")"></div>
-    #end
-</li>
+		#set($labels = $hierarchy.get('labels'))
+		#set($docs = $hierarchy.get('idDocs'))
+		<li>
+		    #foreach ($label in $labels)
+		 	  #set($query="q=")
+		 	  #foreach ($doc in $docs)
+		 	     #if($query=="q=")
+		 	    	 #set($query=$query+"id:$doc")
+		 	   	 #else
+		 	   	 #set($query=$query+" OR id:$doc")
+		 	   	 #end
+		 	  #end
+		 	  <a id="label" href="#url_for_home?$query&clicked=$label&first=$first">
+		        $label ($hierarchy.get('numDocs'))
+		 	  </a>
+		    #end
+		</li>
 
 #end   ## end for each Hierarchy
+
+#foreach ($doc in $response.response.documents)
+		<li>
+		<a href="#url_for_home?q=id:$doc.replace(" ", "")&clicked=$doc.replace(" ", "")">$doc</a>
+		</li>
+#end
+
 </ol>
-<div id="results"></div>
+
